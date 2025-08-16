@@ -572,6 +572,7 @@ function handleCanvasClick(event) {
   const b = pixel[2].toString(16).padStart(2, "0");
   const hexColor = `#${r}${g}${b}`;
   document.getElementById("removeColorPicker").value = hexColor;
+  document.getElementById("colorCode").value = hexColor;
   showMessage(`Color picked: ${hexColor}`);
 }
 

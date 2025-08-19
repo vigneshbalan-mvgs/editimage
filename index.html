@@ -1,404 +1,246 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Image Editor Tool</title>
-    <!-- Load Tailwind CSS for modern styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Custom styles -->
-    <link rel="stylesheet" href="styles.css" />
-  </head>
 
-  <body class="bg-gray-100 text-gray-800 font-sans h-screen flex flex-col">
-    <header class="bg-gray-800 text-white shadow-lg">
-      <div
-        class="container mx-auto px-4 py-3 flex items-center justify-between"
-      >
-        <h1 class="text-xl font-bold">🖼️ Image Editor</h1>
-        <!-- Top Bar Actions -->
-        <div class="flex items-center space-x-2">
-          <label for="fileInput" class="toolbar-button cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"
-              />
-              <path
-                d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V10.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"
-              />
-            </svg>
-            Upload
-          </label>
-          <input type="file" id="fileInput" accept="image/*" class="hidden" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Editor Tool</title>
+  <!-- Load Tailwind CSS for modern styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
 
-          <button
-            id="undoButton"
-            onclick="undo()"
-            class="toolbar-button"
-            disabled
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-arrow-counterclockwise"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"
-              />
-              <path
-                d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"
-              />
-            </svg>
-          </button>
+<body class="bg-gray-100 text-gray-800 font-sans h-screen flex flex-col">
+  <header class="bg-gray-800 text-white shadow-lg">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <h1 class="text-xl font-bold">🖼️ Image Editor</h1>
+      <!-- Top Bar Actions -->
+      <div class="flex items-center space-x-2">
+        <label for="fileInput" class="toolbar-button cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path
+              d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+            <path
+              d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V10.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
+          </svg>
+          Upload
+        </label>
+        <input type="file" id="fileInput" accept="image/*" class="hidden" />
 
-          <button
-            id="redoButton"
-            onclick="redo()"
-            class="toolbar-button"
-            disabled
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-arrow-clockwise"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"
-              />
-              <path
-                d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966a.25.25 0 0 1 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"
-              />
-            </svg>
-          </button>
+        <button id="undoButton" onclick="undo()" class="toolbar-button" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
+            <path
+              d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
+          </svg>
+        </button>
 
-          <button onclick="resetToOriginal()" class="toolbar-button">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"
-              />
-              <path
-                fill-rule="evenodd"
-                d="M8 3c-1.552 0-2.94.707-3.857 1.769-.42.451-.762.91-1.01 1.39C2.68 7.391 2 9.22 2 11c0 .818.397 1.6.861 2.292.573.844 1.47 1.45 2.457 1.815.531.192 1.09.333 1.66.426V.76L5.804 1.904a.25.25 0 0 1-.397-.2L6.38 2.052a.25.25 0 0 1 .397.2L5.804 1.904a.25.25 0 0 1-.397-.2z"
-              />
-            </svg>
-          </button>
+        <button id="redoButton" onclick="redo()" class="toolbar-button" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
+            <path
+              d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966a.25.25 0 0 1 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+          </svg>
+        </button>
+
+        <button onclick="resetToOriginal()" class="toolbar-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path
+              d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z" />
+            <path fill-rule="evenodd"
+              d="M8 3c-1.552 0-2.94.707-3.857 1.769-.42.451-.762.91-1.01 1.39C2.68 7.391 2 9.22 2 11c0 .818.397 1.6.861 2.292.573.844 1.47 1.45 2.457 1.815.531.192 1.09.333 1.66.426V.76L5.804 1.904a.25.25 0 0 1-.397-.2L6.38 2.052a.25.25 0 0 1 .397.2L5.804 1.904a.25.25 0 0 1-.397-.2z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex-1 flex overflow-hidden">
+    <!-- Left Panel: Canvas Area -->
+    <div id="canvas-section" class="flex-1 flex items-center justify-center relative p-4 overflow-auto"
+      ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+      <canvas id="editorCanvas" class="max-w-full max-h-full border border-gray-400 rounded-lg shadow-lg"></canvas>
+      <!-- Cropping Overlay and Handles -->
+      <div id="crop-overlay" class="crop-overlay">
+        <div id="crop-box" class="crop-box">
+          <div class="crop-handle tl"></div>
+          <div class="crop-handle tr"></div>
+          <div class="crop-handle bl"></div>
+          <div class="crop-handle br"></div>
+          <div class="crop-handle t"></div>
+          <div class="crop-handle b"></div>
+          <div class="crop-handle l"></div>
+          <div class="crop-handle r"></div>
         </div>
       </div>
-    </header>
-
-    <div class="flex-1 flex overflow-hidden">
-      <!-- Left Panel: Canvas Area -->
-      <div
-        id="canvas-section"
-        class="flex-1 flex items-center justify-center relative p-4 overflow-auto"
-        ondragover="handleDragOver(event)"
-        ondrop="handleDrop(event)"
-      >
-        <canvas
-          id="editorCanvas"
-          class="max-w-full max-h-full border border-gray-400 rounded-lg shadow-lg"
-        ></canvas>
-        <!-- Cropping Overlay and Handles -->
-        <div id="crop-overlay" class="crop-overlay">
-          <div id="crop-box" class="crop-box">
-            <div class="crop-handle tl"></div>
-            <div class="crop-handle tr"></div>
-            <div class="crop-handle bl"></div>
-            <div class="crop-handle br"></div>
-            <div class="crop-handle t"></div>
-            <div class="crop-handle b"></div>
-            <div class="crop-handle l"></div>
-            <div class="crop-handle r"></div>
-          </div>
-        </div>
-        <!-- Loading Spinner Overlay -->
-        <div id="loader" class="loader-overlay hidden">
-          <div class="spinner"></div>
-          <p class="mt-2 text-lg">⏳ Processing...</p>
-        </div>
-      </div>
-
-      <!-- Right Panel: Sidebar Controls and Features -->
-      <div
-        class="w-full md:w-80 p-4 bg-gray-100 border-l border-gray-300 overflow-y-auto flex-shrink-0"
-      >
-        <!-- Main Toolbar for switching panels -->
-        <div id="sidebar-toolbar" class="flex flex-col gap-2 mb-4">
-          <button
-            onclick="showPanel('cropPanel')"
-            class="toolbar-button w-full"
-          >
-            Crop
-          </button>
-          <button
-            onclick="showPanel('resizePanel')"
-            class="toolbar-button w-full"
-          >
-            Resize
-          </button>
-          <button
-            onclick="showPanel('removeReplacePanel')"
-            class="toolbar-button w-full"
-          >
-            Remove & Replace
-          </button>
-          <button
-            onclick="showPanel('exportPanel')"
-            class="toolbar-button w-full"
-          >
-            Export
-          </button>
-        </div>
-
-        <!-- Feature Panels -->
-        <div id="cropPanel" class="panel">
-          <h3 class="text-xl font-semibold mb-4">Crop Image</h3>
-          <p class="text-gray-600 mb-4">
-            Select a crop area on the canvas and use the handles to resize.
-          </p>
-          <div class="grid grid-cols-2 gap-4">
-            <label class="block">
-              <span class="text-gray-700">X:</span>
-              <input
-                type="number"
-                id="cropX"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-            </label>
-            <label class="block">
-              <span class="text-gray-700">Y:</span>
-              <input
-                type="number"
-                id="cropY"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-            </label>
-            <label class="block">
-              <span class="text-gray-700">Width:</span>
-              <input
-                type="number"
-                id="cropWidth"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-            </label>
-            <label class="block">
-              <span class="text-gray-700">Height:</span>
-              <input
-                type="number"
-                id="cropHeight"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-              />
-            </label>
-          </div>
-          <div class="flex mt-4 gap-2">
-            <button
-              id="applyCropBtn"
-              onclick="applyCrop()"
-              class="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-            >
-              Apply Crop
-            </button>
-            <button
-              id="cancelCropBtn"
-              onclick="cancelCrop()"
-              class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-            >
-              Cancel Crop
-            </button>
-          </div>
-        </div>
-
-        <div id="resizePanel" class="panel">
-          <h3 class="text-xl font-semibold mb-4">Resize Image</h3>
-          <div class="grid grid-cols-2 gap-4">
-            <label class="block">
-              <span class="text-gray-700">Width:</span>
-              <input
-                type="number"
-                id="resizeWidth"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                disabled
-              />
-            </label>
-            <label class="block">
-              <span class="text-gray-700">Height:</span>
-              <input
-                type="number"
-                id="resizeHeight"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                disabled
-              />
-            </label>
-          </div>
-          <label class="flex items-center mt-4">
-            <input
-              type="checkbox"
-              id="keepRatio"
-              class="rounded text-blue-500"
-              checked
-              disabled
-            />
-            <span class="ml-2 text-gray-700">Keep Aspect Ratio</span>
-          </label>
-          <button
-            id="resizeButton"
-            onclick="applyResize()"
-            disabled
-            class="w-full mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-          >
-            Apply Resize
-          </button>
-        </div>
-
-        <div id="removeReplacePanel" class="panel">
-          <h3 class="text-xl font-semibold mb-4">Remove & Replace Color</h3>
-          <p class="text-gray-600 mb-4">
-            Click on the canvas to pick a color to remove.
-          </p>
-          <label class="block mb-4">
-            <span class="text-gray-700">color code : </span>
-            <input type="text" id="colorCode" name="" value="#ffffff" />
-            <span class="text-gray-700">Color to Remove:</span>
-            <input
-              type="color"
-              id="removeColorPicker"
-              value="#ffffff"
-              class="mt-1"
-            />
-          </label>
-          <label class="flex items-center mb-4">
-            <input
-              type="checkbox"
-              id="replaceEnabled"
-              class="rounded text-blue-500"
-              checked
-            />
-            <span class="ml-2 text-gray-700">Replace with New Color</span>
-          </label>
-          <label class="block mb-2" id="newBgColorLabel">
-            <span class="text-gray-700">Replacement Color:</span>
-            <input
-              type="color"
-              id="newBgColorPicker"
-              value="#000000"
-              class="mt-1"
-            />
-          </label>
-          <label class="block mb-4">
-            <span class="text-gray-700">Tolerance:</span>
-            <input
-              type="range"
-              id="removeColorTolerance"
-              value="40"
-              min="0"
-              max="255"
-              step="1"
-              class="mt-1 w-full"
-            />
-          </label>
-          <button
-            onclick="removeAndReplaceColor()"
-            class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-          >
-            Apply
-          </button>
-        </div>
-
-        <div id="exportPanel" class="panel active">
-          <h3 class="text-xl font-semibold mb-4">Export Image</h3>
-          <label class="block mb-2">
-            <span class="text-gray-700">Filename:</span>
-            <input
-              type="text"
-              id="exportName"
-              placeholder="filename"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-            />
-          </label>
-          <label class="block mb-2">
-            <span class="text-gray-700">Format:</span>
-            <select
-              id="exportFormat"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-            >
-              <option value="png">PNG</option>
-              <option value="jpeg">JPEG</option>
-              <option value="webp">WebP</option>
-            </select>
-          </label>
-          <label class="block mb-4">
-            <span class="text-gray-700">Quality:</span>
-            <input
-              type="range"
-              id="exportQuality"
-              min="0.1"
-              max="1.0"
-              step="0.1"
-              value="1.0"
-              class="mt-1 w-full"
-            />
-          </label>
-          <button
-            onclick="exportImage()"
-            class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-          >
-            Export Image
-          </button>
-
-          <h3 class="text-xl font-semibold mt-6 mb-4">Export to PDF</h3>
-          <label class="block mb-2">
-            <span class="text-gray-700">Filename:</span>
-            <input
-              type="text"
-              id="pdfName"
-              placeholder="filename.pdf"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-            />
-          </label>
-          <button
-            onclick="downloadPDF()"
-            class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-          >
-            Export to PDF
-          </button>
-
-          <h3 class="text-xl font-semibold mt-6 mb-4">Export to SVG</h3>
-          <button
-            onclick="exportSVG()"
-            class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Export as SVG
-          </button>
-        </div>
+      <!-- Loading Spinner Overlay -->
+      <div id="loader" class="loader-overlay hidden">
+        <div class="spinner"></div>
+        <p class="mt-2 text-lg">⏳ Processing...</p>
       </div>
     </div>
 
-    <!-- Custom Message Box -->
-    <div id="messageBox"></div>
+    <!-- Right Panel: Sidebar Controls and Features -->
+    <div class="w-full md:w-80 p-4 bg-gray-100 border-l border-gray-300 overflow-y-auto flex-shrink-0">
+      <!-- Main Toolbar for switching panels -->
+      <div id="sidebar-toolbar" class="flex flex-col gap-2 mb-4">
+        <button onclick="showPanel('cropPanel')" class="toolbar-button w-full">
+          Crop
+        </button>
+        <button onclick="showPanel('resizePanel')" class="toolbar-button w-full">
+          Resize
+        </button>
+        <button onclick="showPanel('removeReplacePanel')" class="toolbar-button w-full">
+          Remove & Replace
+        </button>
+        <button onclick="showPanel('exportPanel')" class="toolbar-button w-full">
+          Export
+        </button>
+      </div>
 
-    <!-- Load jsPDF library for PDF export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- Main application script -->
-    <script src="script.js"></script>
-  </body>
+      <!-- Feature Panels -->
+      <div id="cropPanel" class="panel">
+        <h3 class="text-xl font-semibold mb-4">Crop Image</h3>
+        <p class="text-gray-600 mb-4">
+          Select a crop area on the canvas and use the handles to resize.
+        </p>
+        <div class="grid grid-cols-2 gap-4">
+          <label class="block">
+            <span class="text-gray-700">X:</span>
+            <input type="number" id="cropX" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+          </label>
+          <label class="block">
+            <span class="text-gray-700">Y:</span>
+            <input type="number" id="cropY" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+          </label>
+          <label class="block">
+            <span class="text-gray-700">Width:</span>
+            <input type="number" id="cropWidth" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+          </label>
+          <label class="block">
+            <span class="text-gray-700">Height:</span>
+            <input type="number" id="cropHeight" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+          </label>
+        </div>
+        <div class="flex mt-4 gap-2">
+          <button id="applyCropBtn" onclick="applyCrop()"
+            class="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+            Apply Crop
+          </button>
+          <button id="cancelCropBtn" onclick="cancelCrop()"
+            class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+            Cancel Crop
+          </button>
+        </div>
+      </div>
+
+      <div id="resizePanel" class="panel">
+        <h3 class="text-xl font-semibold mb-4">Resize Image</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <label class="block">
+            <span class="text-gray-700">Width:</span>
+            <input type="number" id="resizeWidth" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              disabled />
+          </label>
+          <label class="block">
+            <span class="text-gray-700">Height:</span>
+            <input type="number" id="resizeHeight" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              disabled />
+          </label>
+        </div>
+        <label class="flex items-center mt-4">
+          <input type="checkbox" id="keepRatio" class="rounded text-blue-500" checked disabled />
+          <span class="ml-2 text-gray-700">Keep Aspect Ratio</span>
+        </label>
+        <button id="resizeButton" onclick="applyResize()" disabled
+          class="w-full mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+          Apply Resize
+        </button>
+      </div>
+
+      <div id="removeReplacePanel" class="panel">
+        <h3 class="text-xl font-semibold mb-4">Remove & Replace Color</h3>
+        <p class="text-gray-600 mb-4">
+          Click on the canvas to pick a color to remove.
+        </p>
+        <label class="block mb-4">
+          <span class="text-gray-700">color code : </span>
+          <input type="text" id="colorCode" name="" value="#ffffff" />
+          <span class="text-gray-700">Color to Remove:</span>
+          <input type="color" id="removeColorPicker" value="#ffffff" class="mt-1" />
+        </label>
+        <label class="flex items-center mb-4">
+          <input type="checkbox" id="replaceEnabled" class="rounded text-blue-500" checked />
+          <span class="ml-2 text-gray-700">Replace with New Color</span>
+        </label>
+        <label class="block mb-2" id="newBgColorLabel">
+          <span class="text-gray-700">Replacement Color:</span>
+          <input type="color" id="newBgColorPicker" value="#000000" class="mt-1" />
+        </label>
+        <label class="block mb-4">
+          <span class="text-gray-700">Tolerance:</span>
+          <input type="range" id="removeColorTolerance" value="40" min="0" max="255" step="1" class="mt-1 w-full" />
+        </label>
+        <button onclick="removeAndReplaceColor()"
+          class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+          Apply
+        </button>
+      </div>
+
+      <div id="exportPanel" class="panel active">
+        <h3 class="text-xl font-semibold mb-4">Export Image</h3>
+        <label class="block mb-2">
+          <span class="text-gray-700">Filename:</span>
+          <input type="text" id="exportName" placeholder="filename"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+        </label>
+        <label class="block mb-2">
+          <span class="text-gray-700">Format:</span>
+          <select id="exportFormat" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            <option value="png">PNG</option>
+            <option value="jpeg">JPEG</option>
+            <option value="webp">WebP</option>
+          </select>
+        </label>
+        <label class="block mb-4">
+          <span class="text-gray-700">Quality:</span>
+          <input type="range" id="exportQuality" min="0.1" max="1.0" step="0.1" value="1.0" class="mt-1 w-full" />
+        </label>
+        <button onclick="exportImage()"
+          class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+          Export Image
+        </button>
+
+        <h3 class="text-xl font-semibold mt-6 mb-4">Export to PDF</h3>
+        <label class="block mb-2">
+          <span class="text-gray-700">Filename:</span>
+          <input type="text" id="pdfName" placeholder="filename.pdf"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+        </label>
+        <button onclick="downloadPDF()"
+          class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+          Export to PDF
+        </button>
+
+        <h3 class="text-xl font-semibold mt-6 mb-4">Export to SVG</h3>
+        <button onclick="exportSVG()"
+          class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+          Export as SVG
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Message Box -->
+  <div id="messageBox"></div>
+
+  <!-- Load jsPDF library for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Main application script -->
+  <script src="script.js"></script>
+</body>
+
 </html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>SVG Converter</title>
+</head>
+
+<body>
+  <h2>SVG Converter</h2>
+  <input type="file" id="upload" accept="image/svg+xml" />
+  <br /><br />
+
+  <label>Format:</label>
+  <select id="format">
+    <option value="png">PNG</option>
+    <option value="jpeg">JPEG</option>
+    <option value="webp">WebP</option>
+  </select>
+
+  <label>Quality (JPEG/WebP only):</label>
+  <input type="number" id="quality" min="0" max="100" value="90" /> %
+  <br /><br />
+
+  <canvas id="canvas" style="border: 1px solid #ccc"></canvas>
+  <br /><br />
+  <button id="download">Download</button>
+
+  <script>
+    const upload = document.getElementById("upload");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const format = document.getElementById("format");
+    const qualityInput = document.getElementById("quality");
+    const download = document.getElementById("download");
+    let img;
+
+    upload.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const text = await file.text();
+      img = new Image();
+      img.src = "data:image/svg+xml;base64," + btoa(text);
+
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+      };
+    });
+
+    download.addEventListener("click", () => {
+      let type = "image/" + format.value;
+      let quality = Number(qualityInput.value) / 100;
+
+      // PNG ignores quality, only JPEG & WebP use it
+      const url = canvas.toDataURL(type, quality);
+
+      const link = document.createElement("a");
+      link.download = "converted." + format.value;
+      link.href = url;
+      link.click();
+    });
+  </script>
+</body>
+
+</html>
